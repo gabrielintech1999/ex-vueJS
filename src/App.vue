@@ -1,100 +1,71 @@
 <template>
-  <div id="app">
-    <h1>Site de Apostas</h1>
-
-    <div class="games">
-      <h2>Jogos Disponíveis</h2>
-      <div v-for="game in games" :key="game.id" class="game">
-        <h3>{{ game.name }}</h3>
-        <p>Odds: {{ game.odds }}</p>
-        <button @click="placeBet(game)">Fazer Aposta</button>
-      </div>
-    </div>
-
-    <div class="betting" v-if="selectedGame">
-      <h2>Aposta no jogo: {{ selectedGame.name }}</h2>
-      <form @submit.prevent="submitBet">
-        <label for="amount">Quantia:</label>
-        <input type="number" v-model="betAmount" min="1" required />
-
-        <button type="submit">Confirmar Aposta</button>
-      </form>
-    </div>
-
-    <div class="bet-history">
-      <h2>Histórico de Apostas</h2>
-      <ul>
-        <li v-for="(bet, index) in betHistory" :key="index">
-          Jogo: {{ bet.game.name }} | Quantia: {{ bet.amount }} | Odds: {{ bet.game.odds }}
-        </li>
-      </ul>
-    </div>
+  <div class="quote-generator">
+    <h1>Random Quote Generator</h1>
+    <p class="quote">{{ currentQuote }}</p>
+    <button @click="generateRandomQuote">New Quote</button>
   </div>
 </template>
 
-<script>
+<script setup>
+// Importando a função ref para lidar com reatividade
 import { ref } from 'vue';
 
-export default {
-  setup() {
-    const games = ref([
-      { id: 1, name: "Time A vs Time B", odds: "2.5" },
-      { id: 2, name: "Time C vs Time D", odds: "3.1" },
-    ]);
+// Array de citações
+const quotes = [
+  "The greatest glory in living lies not in never falling, but in rising every time we fall. - Nelson Mandela",
+  "The way to get started is to quit talking and begin doing. - Walt Disney",
+  "Your time is limited, so don't waste it living someone else's life. - Steve Jobs",
+  "If life were predictable it would cease to be life, and be without flavor. - Eleanor Roosevelt",
+  "If you look at what you have in life, you'll always have more. - Oprah Winfrey",
+  "Life is what happens when you're busy making other plans. - John Lennon"
+];
 
-    const selectedGame = ref(null);
-    const betAmount = ref(null);
-    const betHistory = ref([]);
+// Definindo o estado reativo para a citação atual
+const currentQuote = ref(quotes[0]);
 
-    const placeBet = (game) => {
-      selectedGame.value = game;
-      betAmount.value = null;
-    };
-
-    const submitBet = () => {
-      if (betAmount.value && selectedGame.value) {
-        betHistory.value.push({
-          game: selectedGame.value,
-          amount: betAmount.value,
-        });
-        selectedGame.value = null;
-        betAmount.value = null;
-      }
-    };
-
-    return {
-      games,
-      selectedGame,
-      betAmount,
-      betHistory,
-      placeBet,
-      submitBet,
-    };
-  },
+// Função para gerar uma citação aleatória
+const generateRandomQuote = () => {
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  currentQuote.value = quotes[randomIndex];
 };
 </script>
 
-<style>
-#app {
+<style scoped>
+.quote-generator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f0f0;
   font-family: 'Arial', sans-serif;
-  padding: 20px;
 }
 
-.games, .bet-history {
+h1 {
+  font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.game {
-  margin-bottom: 10px;
+.quote {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  text-align: center;
 }
 
 button {
-  margin-top: 10px;
-  padding: 5px 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
-form {
-  margin-top: 10px;
+button:hover {
+  background-color: #45a049;
 }
 </style>
 
