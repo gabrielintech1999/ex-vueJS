@@ -1,10 +1,12 @@
 # composition API vs options API 
-# vue directives
+# vue directives 
+# conditional rendering
 # events
 # composition API functions
 # Form in VueJS
 # data binding
 # API calls with vue
+# list
 
 
 
