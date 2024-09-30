@@ -1,70 +1,67 @@
 <template>
-  <div id="app">
-    <h1>Habit Tracker</h1>
-    <div>
-      <input v-model="newHabit" placeholder="Adicionar novo hábito" />
-      <button @click="addHabit">Adicionar</button>
-    </div>
+  <header>
+    <h3>Meme Generator</h3>
+  </header>
+  <div class="container">
+    <form>
+      <input v-model="meme.top" type="text" placeholder="Top..." />
+      <input v-model="meme.bottom" type="text" placeholder="bottom..." />
+      <button @click="getRandomMemeImg" type="button">
+        Get a new meme image
+      </button>
+    </form>
 
-    <div class="habits-list">
-      <h2>Meus Hábitos</h2>
-      <ul>
-        <li v-for="habit in habits" :key="habit.id">
-          <habit-item
-            :habit="habit"
-            @mark-progress="markHabitProgress(habit.id)"
-          />
-        </li>
-      </ul>
+    <div class="wrapper">
+      <span class="top">{{ meme.top }}</span>
+      <img v-if="!isloading" :src="meme.imgCover" alt="meme image" />
+      <div class="spinner" v-else></div>
+      <span class="bottom">{{ meme.bottom }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import HabitItem from "./components/HabitItem.vue";
+import { onMounted, ref } from "vue";
 
-const habits = ref([]);
-const newHabit = ref("");
+const isloading = ref(true);
 
-const addHabit = () => {
-  if (newHabit.value.trim()) {
-    habits.value.push({
-      id: Date.now(),
-      name: newHabit.value,
-      progress: [],
-    });
-    newHabit.value = "";
+let memes = [];
+
+const meme = ref({
+  top: "",
+  bottom: "",
+  imgCover: "",
+});
+
+const getMemes = async () => {
+  try {
+    const res = await fetch("https://api.imgflip.com/get_memes");
+    const data = await res.json();
+
+    memes = data.data.memes;
+
+    isloading.value = !isloading.value;
+    getRandomMemeImg()
+    //console.log(data.data.memes);
+  } catch (error) {
+    console.log("Error");
   }
 };
 
-const markHabitProgress = (habitId) => {
-  const habit = habits.value.find((h) => h.id === habitId);
-  habit.progress.push(new Date().toLocaleDateString());
+const getRandomMemeImg = () => {
+  const randomIndex = Math.floor(Math.random() * memes.length);
+
+  const { url } = memes[randomIndex];
+
+  meme.value.imgCover = url;
+
+  console.log(url);
 };
+
+onMounted(() => {
+  getMemes();
+});
 </script>
-
-<style>
-#app {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.habits-list {
-  margin-top: 20px;
-}
-
-input {
-  padding: 10px;
-  margin-right: 10px;
-}
-</style>
-
-
-
-
 
 <!-- <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
