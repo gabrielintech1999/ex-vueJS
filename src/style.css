@@ -196,3 +196,22 @@ span {
     transform: rotate(360deg);
   }
 } */
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+
+body {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  background-color: #000;
+  color: #fff;
+}
+
+.container {
+  padding: 12px;
+  text-align: center;
+}

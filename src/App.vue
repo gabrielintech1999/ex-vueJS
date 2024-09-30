@@ -1,67 +1,102 @@
 <template>
-  <header>
-    <h3>Meme Generator</h3>
-  </header>
-  <div class="container">
-    <form>
-      <input v-model="meme.top" type="text" placeholder="Top..." />
-      <input v-model="meme.bottom" type="text" placeholder="bottom..." />
-      <button @click="getRandomMemeImg" type="button">
-        Get a new meme image
+ <div class="container">
+  <h1>tenzie game is the next...</h1>
+  <ul>
+    <li v-for="die in dice" :key="die.id" >
+      <button :class="{ selected: die.isSelected  }" class="die" @click="selectDice(die.id)">
+        {{ die.value }}
       </button>
-    </form>
-
-    <div class="wrapper">
-      <span class="top">{{ meme.top }}</span>
-      <img v-if="!isloading" :src="meme.imgCover" alt="meme image" />
-      <div class="spinner" v-else></div>
-      <span class="bottom">{{ meme.bottom }}</span>
-    </div>
-  </div>
+    </li>
+  </ul>
+  <button @click="rollDice">roll dice</button>
+ </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 
-const isloading = ref(true);
+const generateDice = () => {
+  console.log("ok");
 
-let memes = [];
+  return Array.from({ length: 10 }, (_, i) => ({
+    id: i + 1,
+    value: Math.ceil(Math.random() * 6),
+    isSelected: false,
+  }));
+};
 
-const meme = ref({
-  top: "",
-  bottom: "",
-  imgCover: "",
-});
+const dice = ref(generateDice());
 
-const getMemes = async () => {
-  try {
-    const res = await fetch("https://api.imgflip.com/get_memes");
-    const data = await res.json();
+const rollDice = () => {
+  console.log("OK");
 
-    memes = data.data.memes;
+  dice.value = dice.value.map((die) =>
+    die.isSelected ? die : { ...die, value: Math.ceil(Math.random() * 6) }
+  );
+};
 
-    isloading.value = !isloading.value;
-    getRandomMemeImg()
-    //console.log(data.data.memes);
-  } catch (error) {
-    console.log("Error");
+const selectDice = (idSelected) => {
+  dice.value = dice.value.map((die) =>
+    die.id !== idSelected ? die : { ...die, isSelected: !die.isSelected }
+  );
+};
+
+/*
+const generateDice = () => {
+
+  console.log("OK");
+  
+  
+  for (let i = 0; i < 10; i++) {
+    
+    dice.value.push({
+      id: Date.now(),
+      value: Math.ceil(Math.random() * 6),
+      isSelected: true
+    })
+    
   }
-};
 
-const getRandomMemeImg = () => {
-  const randomIndex = Math.floor(Math.random() * memes.length);
-
-  const { url } = memes[randomIndex];
-
-  meme.value.imgCover = url;
-
-  console.log(url);
-};
-
-onMounted(() => {
-  getMemes();
-});
+}*/
 </script>
+
+<style scoped>
+ul {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(30px, 50px));
+  gap: 10px;
+  text-align: center;
+
+  margin: 25px auto;
+  max-width: 360px;
+  justify-content: center;
+  /* border: 1px solid red; */
+}
+ li {
+  list-style: none;
+}
+
+.die {
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  padding: 15px;
+  margin: 0 auto;
+  display: block;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.selected {
+  background-color: blue;
+}
+</style>
 
 <!-- <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
