@@ -7,6 +7,9 @@
 # data binding
 # API calls with vue
 # list
+# Loops
+# Components
+# Lifecicle and lifecicle hooks
 
 
 
