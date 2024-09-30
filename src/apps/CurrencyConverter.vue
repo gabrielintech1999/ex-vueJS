@@ -5,6 +5,8 @@
         <label>Amount:</label>
         <input v-model="amount" type="number" placeholder="Enter amount" />
       </div>
+        
+      <h1>{{ fromCurrency }}</h1>
       <div>
         <label>From:</label>
         <select v-model="fromCurrency">
@@ -24,6 +26,9 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
+
+ 
+  
   
   const amount = ref(1);
   const fromCurrency = ref('USD');
@@ -48,6 +53,7 @@
   };
   
   onMounted(() => {
+
     fetchCurrencies();
   });
   </script>
