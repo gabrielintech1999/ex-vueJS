@@ -197,7 +197,7 @@ span {
   }
 } */
 
-* {
+/* * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -214,4 +214,4 @@ body {
 .container {
   padding: 12px;
   text-align: center;
-}
+} */
