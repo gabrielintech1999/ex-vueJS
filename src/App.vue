@@ -1,5 +1,58 @@
+<template>
+    <h1>Expense Tracker</h1>
+    <form  @submit.prevent="addExpense" >
+      <input v-model="description" placeholder="Description..." type="text" name="" id="">
+      <input v-model="amount" placeholder="Amount..." type="number" name="" id="">
+
+      <select  v-model="category" name="" id="">
+        <option>Transport</option>
+        <option>Food</option>
+        <option>Internet</option>
+      </select>
+
+      <button type="submit">Add Expense</button>
+    </form>
+    <div class="expense">
+        <h1>Expenses</h1>
+
+        <u>
+          <li v-for="expense in expenses"  >
+            <span>{{ expense.description  }}  {{ expense.amount }}KZ ({{expense.category}})</span>
+          </li>
+        </u>
+    </div>
+</template>
+
+<script setup >
+import { ref } from 'vue';
 
 
+
+const amount = ref("")
+const description = ref("")
+const category = ref("Food")
+const expenses = ref([])
+
+let n = new Date().toISOString()
+console.log(n.slice(0, 10));
+
+
+
+    const addExpense = () => {
+        
+      expenses.value.push({
+        id: Date.now(),
+        description: description.value,
+        amount: parseFloat(amount.value),
+        category: category.value,
+        date: new Date().toISOString().slice(0, 10)
+
+      })
+
+
+        
+    }
+</script>
 
 <!-- <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
